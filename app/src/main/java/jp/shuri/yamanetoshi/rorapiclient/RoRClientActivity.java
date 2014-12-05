@@ -32,7 +32,7 @@ public class RoRClientActivity extends ListActivity {
 
 	private final String TAG = "RoRClientActivity";
 	
-	private final String BASE_URL = "http://shrouded-tundra-4125.herokuapp.com/";
+	private final String BASE_URL = "http://frozen-sands-2986.herokuapp.com/";
 	private final String DELETE = "tasks/";
 	private final String TASKS = "tasks.json";
     private final String PLEASE_WAIT = "please wait...";
@@ -47,12 +47,13 @@ public class RoRClientActivity extends ListActivity {
 	
 	private JSONArray mList;
 	private String[] mArray;
-	
-	private ActionMode mMode;
-	private MyAdapter mAdapter;
-	private SparseBooleanArray mCheckedItemPositions;
-	
-    MultiChoiceModeListener mActionModeCalback = new MultiChoiceModeListener() {
+
+    MultiChoiceModeListener mActionModeCallback = new MultiChoiceModeListener() {
+
+        private ActionMode mMode;
+        private MyAdapter mAdapter;
+        private SparseBooleanArray mCheckedItemPositions;
+
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             return false;
@@ -60,58 +61,22 @@ public class RoRClientActivity extends ListActivity {
 
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            getMenuInflater().inflate(R.menu.list_action, menu);
             mode.setTitle("対象を選択");
             return true;
         }
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.delete:
-                	SparseBooleanArray checkedItemPositions = getListView().getCheckedItemPositions();
-                	MyAdapter adapter = (MyAdapter) getListView().getAdapter();
-                	
-                	//mProgressDialog.show();
-                	mHandler.post(new Runnable() {
-
-						@Override
-						public void run() {
-							mProgressDialog.show();
-						}
-                		
-                	});
-
-                	requestDelete(mode, adapter, checkedItemPositions);
-                	/*
-                	for (int i = 0; i < adapter.getCount(); i++) {
-                		boolean checked = checkedItemPositions.get(i);
-                		if (checked) {
-                			Log.d(TAG, "posision (" + i + ") is checked");
-                		}
-                	}
-                	*/
-                	/*
-                    deleteCheckedImages();
-                    updateImages();
-                    */
-                    // アクションモード終了
-                    //mode.finish();
-                    return true;
-                default:
-                    return false;
-            }
+            return true;
         }
         
-        private void requestDelete(ActionMode mode, MyAdapter adapter, 
-        		SparseBooleanArray checkedItemPositions) {
+        private void requestDelete(ActionMode mode, MyAdapter adapter) {
 			Log.d(TAG, "requestDelete() start");
 
 			mMode = mode;
         	mAdapter = adapter;
-        	mCheckedItemPositions = checkedItemPositions;
-        	
-        	new Thread(new Runnable() {
+
+            new Thread(new Runnable() {
 
 				@Override
 				public void run() {
@@ -145,6 +110,26 @@ public class RoRClientActivity extends ListActivity {
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
+            SparseBooleanArray checkedItemPositions = getListView().getCheckedItemPositions();
+            MyAdapter adapter = (MyAdapter) getListView().getAdapter();
+
+            //mProgressDialog.show();
+            mHandler.post(new Runnable() {
+
+                @Override
+                public void run() {
+                    mProgressDialog.show();
+                }
+
+            });
+
+            mCheckedItemPositions = new SparseBooleanArray();
+            for(int i = 0; i < adapter.getCount(); i++) {
+                mCheckedItemPositions.put(i, checkedItemPositions.get(i));
+                Log.d(TAG, "mCheckedItemPositions.get(" + i + ") : " + mCheckedItemPositions.get(i));
+            }
+
+            requestDelete(mode, adapter);
         }
 
         @Override
@@ -159,7 +144,7 @@ public class RoRClientActivity extends ListActivity {
 		
 		ListView lv = getListView();
 		lv.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
-		lv.setMultiChoiceModeListener(mActionModeCalback);
+		lv.setMultiChoiceModeListener(mActionModeCallback);
 //		lv.setBackgroundColor(R.color.white);
 		
 		lv.setOnItemClickListener(new OnItemClickListener() {

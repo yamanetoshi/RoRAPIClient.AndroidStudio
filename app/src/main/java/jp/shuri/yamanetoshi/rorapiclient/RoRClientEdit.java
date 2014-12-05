@@ -27,7 +27,7 @@ public class RoRClientEdit extends Activity {
 	private String id;
 	private String name;
 	
-	private String URL = "http://shrouded-tundra-4125.herokuapp.com/";
+	private String URL = "http://frozen-sands-2986.herokuapp.com/";
 	private DefaultHttpClient mDefaultHttpClient = new DefaultHttpClient();
 	private String POST = "tasks";
 	private String PUT = "tasks/";

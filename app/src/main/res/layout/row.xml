@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout 
+<jp.shuri.yamanetoshi.rorapiclient.CheckedLinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:orientation="horizontal"
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
-  android:background="@color/list_item"
+  android:background="@drawable/listitem_bg"
 >
 <TextView 
   android:id="@+id/row_textview"
@@ -15,4 +15,4 @@
   android:padding="10dip"
   android:textColor="#000000"
 />
-</LinearLayout>
+</jp.shuri.yamanetoshi.rorapiclient.CheckedLinearLayout>
